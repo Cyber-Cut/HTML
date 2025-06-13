@@ -1,133 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Customer Services</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manager's Report</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 20px;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 20px;
-    }
-    .box {
-      border: 1px solid #ccc;
       padding: 20px;
-      border-radius: 8px;
+      background-color: #f8f8f8;
     }
-    .box h2 {
-      color: #2b6cb0;
+    h2 {
+      margin-top: 30px;
     }
-    ul {
-      list-style: none;
-      padding-left: 0;
+    textarea {
+      width: 100%;
+      height: 100px;
+      margin-bottom: 10px;
+      padding: 10px;
+      font-size: 14px;
     }
-    ul li {
-      margin-bottom: 8px;
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-top: 20px;
     }
-    .tick::before {
-      content: "✔";
-      color: green;
-      margin-right: 8px;
+    #output {
+      background: #fff;
+      padding: 20px;
+      border: 1px solid #ccc;
+      margin-top: 30px;
     }
-    .additional-toggle {
-      color: #007bff;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      user-select: none;
+    #output h3 {
+      margin-top: 20px;
     }
-    .triangle {
-      margin-left: 6px;
-      transition: transform 0.3s ease;
-    }
-    .rotated {
-      transform: rotate(180deg);
-    }
-    .additional-services {
-      display: none;
-      margin-top: 10px;
-      padding-left: 18px;
+    .timestamp {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 20px;
     }
   </style>
 </head>
 <body>
 
-<h1>Customer Services</h1>
-<div class="grid">
-  <!-- Service Box -->
-  <div class="box">
-    <h2>Cleaning</h2>
-    <ul>
-      <li class="tick">Office cleaning</li>
-      <li class="tick">Factory cleaning</li>
-    </ul>
-    <div class="additional-toggle" onclick="toggleServices(this)">
-      Need additional services? <span class="triangle">▼</span>
-    </div>
-    <ul class="additional-services">
-      <li>High-level cleaning</li>
-      <li>Warehouse sanitation</li>
-    </ul>
-  </div>
+  <h1>Manager's Daily Report</h1>
 
-  <div class="box">
-    <h2>Recycling</h2>
-    <ul>
-      <li class="tick">General waste</li>
-      <li class="tick">Hazardous waste</li>
-    </ul>
-    <div class="additional-toggle" onclick="toggleServices(this)">
-      Need additional services? <span class="triangle">▼</span>
-    </div>
-    <ul class="additional-services">
-      <li>Paper recycling</li>
-      <li>Glass collection</li>
-    </ul>
-  </div>
+  <form id="reportForm">
+    <h2>Health & Safety:</h2>
+    <textarea name="healthSafety"></textarea>
 
-  <div class="box">
-    <h2>Equipment</h2>
-    <ul>
-      <li class="tick">Scrubber dryer hire</li>
-      <li class="tick">Carpet cleaner hire</li>
-    </ul>
-    <div class="additional-toggle" onclick="toggleServices(this)">
-      Need additional services? <span class="triangle">▼</span>
-    </div>
-    <ul class="additional-services">
-      <li>Operator hire</li>
-      <li>Training guides</li>
-    </ul>
-  </div>
+    <h2>Machines / Equipment:</h2>
+    <textarea name="machines"></textarea>
 
-  <div class="box">
-    <h2>Assist</h2>
-    <ul>
-      <li class="tick">Pest control</li>
-      <li class="tick">Line marking</li>
-    </ul>
-    <div class="additional-toggle" onclick="toggleServices(this)">
-      Need additional services? <span class="triangle">▼</span>
-    </div>
-    <ul class="additional-services">
-      <li>Drainage</li>
-      <li>Landscaping</li>
-    </ul>
-  </div>
-</div>
+    <h2>Team & Recruitment:</h2>
+    <textarea name="team"></textarea>
 
-<script>
-  function toggleServices(el) {
-    const list = el.nextElementSibling;
-    const arrow = el.querySelector('.triangle');
-    list.style.display = list.style.display === 'block' ? 'none' : 'block';
-    arrow.classList.toggle('rotated');
-  }
-</script>
+    <h2>Client Engagement:</h2>
+    <textarea name="client"></textarea>
+
+    <h2>Hours Delivery:</h2>
+    <textarea name="hours"></textarea>
+
+    <h2>UKG / IT:</h2>
+    <textarea name="ukg"></textarea>
+
+    <h2>Audits:</h2>
+    <textarea name="audits"></textarea>
+
+    <h2>A.O.B:</h2>
+    <textarea name="aob"></textarea>
+
+    <button type="button" onclick="submitReport()">Submit Report</button>
+  </form>
+
+  <div id="output"></div>
+
+  <script>
+    function submitReport() {
+      const form = document.forms["reportForm"];
+      const fields = {
+        "Health & Safety": form["healthSafety"].value,
+        "Machines / Equipment": form["machines"].value,
+        "Team & Recruitment": form["team"].value,
+        "Client Engagement": form["client"].value,
+        "Hours Delivery": form["hours"].value,
+        "UKG / IT": form["ukg"].value,
+        "Audits": form["audits"].value,
+        "A.O.B": form["aob"].value,
+      };
+
+      // Get current date & time
+      const now = new Date();
+      const dateStr = now.toLocaleDateString();
+      const timeStr = now.toLocaleTimeString();
+
+      let outputHtml = `<h2>Manager's Report</h2>`;
+      outputHtml += `<div class="timestamp">Posted on ${dateStr} at ${timeStr}</div>`;
+
+      for (let [heading, content] of Object.entries(fields)) {
+        outputHtml += `<h3><strong>${heading}</strong></h3>`;
+        outputHtml += `<p>${content.trim() || "<em>No updates.</em>"}</p>`;
+      }
+
+      document.getElementById("output").innerHTML = outputHtml;
+    }
+  </script>
 
 </body>
 </html>
