@@ -1,558 +1,896 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Warehouse Housekeeping — Training</title>
-<style>
-  :root{
-    --bg:#f6f7fb; --card:#fff; --accent:#0b63d6; --muted:#6b7280;
-  }
-  html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;}
-  body{background:linear-gradient(180deg,var(--bg),#eef2f7);color:#111;}
-  .app{max-width:980px;margin:28px auto;padding:18px;}
-  .header{display:flex;align-items:center;gap:14px;margin-bottom:12px;}
-  .logo{width:56px;height:56px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#1ea7ff);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;}
-  h1{font-size:20px;margin:0;}
-  .meta{color:var(--muted);font-size:13px;}
-  .layout{display:grid;grid-template-columns:240px 1fr;gap:18px;margin-top:18px;}
-  .nav{background:var(--card);border-radius:10px;padding:14px;box-shadow:0 6px 18px rgba(12,12,20,0.06);height:calc(100vh - 180px);position:sticky;top:24px;overflow:auto;}
-  .nav h3{margin:0 0 8px 0;font-size:13px;color:var(--muted)}
-  .toc{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px;}
-  .toc button{appearance:none;border:0;background:transparent;text-align:left;padding:8px;border-radius:8px;cursor:pointer;font-size:14px;color:#0b1220;}
-  .toc button.active{background:rgba(11,99,214,0.08);color:var(--accent);font-weight:600;}
-  .card{background:var(--card);padding:22px;border-radius:12px;box-shadow:0 8px 24px rgba(12,12,20,0.06);}
-  .content{min-height:420px;}
-  .controls{display:flex;justify-content:space-between;align-items:center;margin-top:14px;gap:10px;}
-  .btn{display:inline-flex;align-items:center;gap:8px;padding:9px 12px;border-radius:10px;border:0;cursor:pointer;font-weight:600;}
-  .btn.primary{background:var(--accent);color:#fff;}
-  .btn.ghost{background:transparent;border:1px solid #e6eefb;color:var(--accent);}
-  .progress{height:8px;background:#e6eefb;border-radius:8px;overflow:hidden;margin-top:12px;}
-  .progress > i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),#1ea7ff);width:0%;}
-  .question{border:1px solid #eef4ff;background:#fbfdff;padding:14px;border-radius:8px;margin-top:12px;}
-  .options{display:flex;flex-direction:column;gap:8px;margin-top:10px;}
-  .option{display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;border:1px solid transparent;cursor:pointer;}
-  .option input{margin:0;}
-  .option:hover{background:#f1f7ff;}
-  .feedback{margin-top:8px;font-size:14px;}
-  .badge{display:inline-block;padding:6px 8px;border-radius:999px;background:#eef7ff;color:var(--accent);font-weight:700;font-size:12px;}
-  .small{font-size:13px;color:var(--muted);}
-  .certificate{padding:20px;text-align:center;}
-  @media (max-width:920px){.layout{grid-template-columns:1fr;}.nav{position:relative;height:auto;}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warehouse Housekeeping Training - ISM-HS-SSOW/RA-008</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .doc-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+            text-align: left;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .doc-info div {
+            padding: 10px;
+        }
+        
+        .doc-info strong {
+            color: #667eea;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-tabs button {
+            flex: 1;
+            min-width: 150px;
+            padding: 15px 20px;
+            background: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .nav-tabs button:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        .nav-tabs button.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .content-section {
+            display: none;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: fadeIn 0.5s;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        h3 {
+            color: #764ba2;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        
+        .risk-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            overflow-x: auto;
+            display: block;
+        }
+        
+        .risk-table table {
+            width: 100%;
+            min-width: 800px;
+        }
+        
+        .risk-table th, .risk-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        .risk-table th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .risk-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .risk-level {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .risk-acceptable { background: #d4edda; color: #155724; }
+        .risk-adequate { background: #fff3cd; color: #856404; }
+        .risk-tolerable { background: #f8d7da; color: #721c24; }
+        
+        .hazard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .hazard-card {
+            padding: 15px;
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            border-radius: 5px;
+        }
+        
+        .hazard-card.checked {
+            background: #fff3cd;
+            border-left-color: #ffc107;
+        }
+        
+        .step-card {
+            background: #f8f9fa;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .step-card h3 {
+            color: #667eea;
+            margin-top: 0;
+        }
+        
+        .step-content {
+            margin-top: 15px;
+        }
+        
+        ul, ol {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+        
+        li {
+            margin: 8px 0;
+        }
+        
+        .dos-donts {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .dos, .donts {
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .dos {
+            background: #d4edda;
+            border-left: 5px solid #28a745;
+        }
+        
+        .donts {
+            background: #f8d7da;
+            border-left: 5px solid #dc3545;
+        }
+        
+        .dos h4, .donts h4 {
+            margin-bottom: 15px;
+        }
+        
+        .dos h4 { color: #155724; }
+        .donts h4 { color: #721c24; }
+        
+        .ppe-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .ppe-item {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+        }
+        
+        .ppe-item.required {
+            background: #fff3cd;
+            border-color: #ffc107;
+        }
+        
+        .ppe-item.may-required {
+            background: #e7f3ff;
+            border-color: #007bff;
+        }
+        
+        .quiz-section {
+            margin-top: 30px;
+            padding: 25px;
+            background: #e7f3ff;
+            border-radius: 8px;
+        }
+        
+        .quiz-question {
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .quiz-question h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .quiz-answer {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+        
+        .signature-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .signature-box {
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            border: 2px solid #667eea;
+        }
+        
+        .signature-box h4 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .signature-field {
+            margin: 15px 0;
+        }
+        
+        .signature-field label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        
+        .signature-field input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .warning-box {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .warning-box strong {
+            color: #856404;
+        }
+        
+        @media (max-width: 768px) {
+            .dos-donts {
+                grid-template-columns: 1fr;
+            }
+            
+            .signature-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+        }
+        
+        .print-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 15px 25px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+        
+        .print-button:hover {
+            background: #218838;
+            transform: scale(1.05);
+        }
+    </style>
 </head>
 <body>
-  <div class="app" role="application" aria-label="Warehouse Housekeeping Training">
-    <div class="header">
-      <div class="logo">WH</div>
-      <div>
-        <h1>Warehouse Housekeeping — Training</h1>
-        <div class="meta">Based on provided Warehouse Housekeeping RA & SSOW. :contentReference[oaicite:1]{index=1}</div>
-      </div>
+    <div class="container">
+        <div class="header">
+            <h1>🏭 Warehouse Housekeeping Training</h1>
+            <p style="font-size: 1.2em; color: #666; margin-top: 10px;">Safe System of Work & Risk Assessment</p>
+            <div class="doc-info">
+                <div>
+                    <strong>Document Reference:</strong>
+                    ISM-HS-SSOW/RA-008
+                </div>
+                <div>
+                    <strong>Revision:</strong>
+                    6
+                </div>
+                <div>
+                    <strong>Date:</strong>
+                    09/07/2025
+                </div>
+                <div>
+                    <strong>Risk Rating:</strong>
+                    <span class="risk-level risk-adequate">ADEQUATE</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="nav-tabs">
+            <button class="active" onclick="showSection('overview')">Overview</button>
+            <button onclick="showSection('hazards')">Hazards</button>
+            <button onclick="showSection('risk-analysis')">Risk Analysis</button>
+            <button onclick="showSection('ppe')">PPE & COSHH</button>
+            <button onclick="showSection('procedures')">Procedures</button>
+            <button onclick="showSection('validation')">Validation</button>
+        </div>
+        
+        <!-- Overview Section -->
+        <div id="overview" class="content-section active">
+            <h2>📋 Task Overview</h2>
+            <p style="font-size: 1.1em; margin-bottom: 20px;">General upkeep of the warehouse to ensure a safe and efficient working environment.</p>
+            
+            <div class="warning-box">
+                <strong>⚠️ Important:</strong> This Safe System of Work is designed to guide you in the safe execution of warehouse housekeeping tasks. Every effort has been made to ensure these instructions enable trained personnel to carry out required tasks safely. In the event of difficulty, stop and seek advice.
+            </div>
+            
+            <h3>Document Details</h3>
+            <ul>
+                <li><strong>Assessor:</strong> Jamie Livermore</li>
+                <li><strong>Date of Assessment:</strong> 01/09/2018</li>
+                <li><strong>Site:</strong> All Sites</li>
+                <li><strong>Last Revision:</strong> 09/07/2025 - Risk of Leptospirosis added</li>
+            </ul>
+            
+            <h3>Risk Rating Scale</h3>
+            <div class="hazard-grid">
+                <div class="hazard-card">
+                    <strong>1-4: Acceptable</strong>
+                    <p>No further action required</p>
+                </div>
+                <div class="hazard-card" style="background: #fff3cd;">
+                    <strong>5-9: Adequate</strong>
+                    <p>Look to improve at next assessment</p>
+                </div>
+                <div class="hazard-card" style="background: #f8d7da;">
+                    <strong>10-16: Tolerable</strong>
+                    <p>Improve before next assessment</p>
+                </div>
+                <div class="hazard-card" style="background: #f5c6cb;">
+                    <strong>17-25: Unacceptable</strong>
+                    <p>Stop activity and improve immediately</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Hazards Section -->
+        <div id="hazards" class="content-section">
+            <h2>⚠️ Identified Hazards</h2>
+            <p style="margin-bottom: 20px;">The following hazards have been identified within warehouse housekeeping tasks:</p>
+            
+            <div class="hazard-grid">
+                <div class="hazard-card checked"><strong>✓</strong> Slip, Trip and Fall</div>
+                <div class="hazard-card checked"><strong>✓</strong> Manual Handling Injuries</div>
+                <div class="hazard-card checked"><strong>✓</strong> Vehicles / Vehicle Movements</div>
+                <div class="hazard-card checked"><strong>✓</strong> Dust</div>
+                <div class="hazard-card checked"><strong>✓</strong> Impacts Between MHE, Vehicles and Pedestrians</div>
+                <div class="hazard-card checked"><strong>✓</strong> Cuts and Abrasions</div>
+                <div class="hazard-card checked"><strong>✓</strong> Environmental Impact</div>
+                <div class="hazard-card checked"><strong>✓</strong> Chemicals (COSHH)</div>
+            </div>
+        </div>
+        
+        <!-- Risk Analysis Section -->
+        <div id="risk-analysis" class="content-section">
+            <h2>📊 Risk Analysis</h2>
+            
+            <div class="risk-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Hazard</th>
+                            <th>Who May Be Harmed</th>
+                            <th>How They May Be Harmed</th>
+                            <th>Control Measures</th>
+                            <th>Risk Level</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Objects falling from height</td>
+                            <td>ISM operative</td>
+                            <td>Severity depends on object size, weight, and strike position</td>
+                            <td>Comply with four pick slots separation when reach trucks work at height</td>
+                            <td><span class="risk-level risk-adequate">8 - Adequate</span></td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Working in confined spaces (under racking)</td>
+                            <td>ISM operative</td>
+                            <td>Racking collapse, head bumps due to low ceiling</td>
+                            <td>Bump caps must be worn, caution signage/beacons placed in aisle</td>
+                            <td><span class="risk-level risk-acceptable">6 - Acceptable</span></td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Spillages</td>
+                            <td>ISM operative or client staff</td>
+                            <td>Slip injuries, machinery skidding, collisions</td>
+                            <td>Isolate immediately with wet floor signs, retrieve tools/PPE</td>
+                            <td><span class="risk-level risk-adequate">9 - Adequate</span></td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>Cleaning hazardous chemicals</td>
+                            <td>ISM operative</td>
+                            <td>Skin irritation, exposure to flammables, toxics</td>
+                            <td>Only COSHH trained staff handle hazardous chemical spillages</td>
+                            <td><span class="risk-level risk-adequate">8 - Adequate</span></td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>Handling broken glass/sharp objects</td>
+                            <td>ISM operative, client staff, machinery</td>
+                            <td>Falls onto glass, hand cuts, machinery damage (burst tyres)</td>
+                            <td>Isolate with caution signs, use correct tools/PPE (anti-cut gloves EN)</td>
+                            <td><span class="risk-level risk-adequate">8 - Adequate</span></td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>Working in live MHE environment</td>
+                            <td>ISM Operative, Agency</td>
+                            <td>Impact injuries, entrapment, crush injuries, broken bones</td>
+                            <td>Allocated entry/exit routes, safe routes defined, work areas barriered off</td>
+                            <td><span class="risk-level risk-adequate">8 - Adequate</span></td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td>Cross contamination of cleaning equipment</td>
+                            <td>ISM Staff</td>
+                            <td>Cross contamination of fluids/chemicals from other site areas</td>
+                            <td>Only BLUE cleaning equipment used in warehouse/factory</td>
+                            <td><span class="risk-level risk-acceptable">3 - Acceptable</span></td>
+                        </tr>
+                        <tr>
+                            <td>8</td>
+                            <td>Dust</td>
+                            <td>ISM Operative, client staff</td>
+                            <td>Respiratory problems</td>
+                            <td>Dust masks available on request, must be worn under racking</td>
+                            <td><span class="risk-level risk-acceptable">6 - Acceptable</span></td>
+                        </tr>
+                        <tr>
+                            <td>9</td>
+                            <td>Contracting Leptospirosis (Weil's disease) from rat droppings/urine</td>
+                            <td>ISM Operative</td>
+                            <td>Kidney damage, meningitis, liver failure, respiratory trouble, death</td>
+                            <td>Report droppings to line manager, do not disturb unless trained</td>
+                            <td><span class="risk-level risk-adequate">5 - Adequate</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <h3>Further Precautions to Reduce Risks</h3>
+            <div class="step-card">
+                <h4>1. Client Induction</h4>
+                <p>Undertaking a client induction makes you aware of site-specific staff movement patterns, walkways, and instructions, reducing incident risk.</p>
+            </div>
+            <div class="step-card">
+                <h4>2. Tool Management</h4>
+                <p>Keep only currently-used tools nearby. Return unused equipment to designated storage to avoid slips, trips, falls, and spillages.</p>
+            </div>
+        </div>
+        
+        <!-- PPE & COSHH Section -->
+        <div id="ppe" class="content-section">
+            <h2>🦺 Personal Protective Equipment (PPE)</h2>
+            
+            <div class="ppe-grid">
+                <div class="ppe-item required">
+                    <strong>✓ HIGH VIS</strong>
+                    <p>Required</p>
+                </div>
+                <div class="ppe-item required">
+                    <strong>✓ SAFETY BOOTS</strong>
+                    <p>Required</p>
+                </div>
+                <div class="ppe-item required">
+                    <strong>✓ HEARING PROTECTION</strong>
+                    <p>Required</p>
+                </div>
+                <div class="ppe-item may-required">
+                    <strong>M GOGGLES</strong>
+                    <p>May be required</p>
+                </div>
+                <div class="ppe-item may-required">
+                    <strong>M DUST MASK</strong>
+                    <p>May be required</p>
+                </div>
+                <div class="ppe-item may-required">
+                    <strong>M GLOVES</strong>
+                    <p>May be required</p>
+                </div>
+                <div class="ppe-item may-required">
+                    <strong>M HARD HAT / BUMP CAP</strong>
+                    <p>May be required</p>
+                </div>
+            </div>
+            
+            <h3>🧪 COSHH Requirements</h3>
+            <p style="margin-bottom: 15px;"><strong>Additional COSHH Details:</strong> Some spillages could contain chemicals that are harmful/irritant.</p>
+            
+            <div class="warning-box">
+                <strong>⚠️ COSHH Hazard Symbols to Recognize:</strong>
+                <ul style="margin-top: 10px;">
+                    <li>Harmful / Irritant</li>
+                    <li>Corrosive</li>
+                    <li>Dangerous to Environment</li>
+                </ul>
+            </div>
+            
+            <h3>Emergency Requirements</h3>
+            <ul>
+                <li><strong>First Aid:</strong> Available on site</li>
+                <li><strong>Fire:</strong> Follow site procedures</li>
+                <li><strong>Rescue:</strong> Emergency procedures in place</li>
+            </ul>
+        </div>
+        
+        <!-- Procedures Section -->
+        <div id="procedures" class="content-section">
+            <h2>📖 Safe System of Work Procedures</h2>
+            
+            <div class="dos-donts">
+                <div class="dos">
+                    <h4>✓ DO's</h4>
+                    <ul>
+                        <li>ALWAYS ensure you have the correct PPE</li>
+                        <li>ALWAYS use protective gloves for spillages/breakages</li>
+                        <li>ALWAYS use signage to mark your work area</li>
+                        <li>ALWAYS seek assistance if unsure</li>
+                        <li>ALWAYS return equipment clean and tidy</li>
+                        <li>ALWAYS report all incidents</li>
+                        <li>ALWAYS stick to warehouse/yard walkways</li>
+                        <li>ALWAYS wear hi-vis vest, safety boots, ear defenders</li>
+                        <li>ALWAYS apply the 4 meter separation rule in aisles</li>
+                    </ul>
+                </div>
+                <div class="donts">
+                    <h4>✗ DON'Ts</h4>
+                    <ul>
+                        <li>NEVER undertake untrained tasks (e.g., COSHH)</li>
+                        <li>NEVER leave equipment unattended (except in storage)</li>
+                        <li>NEVER use mobile phone unless authorized</li>
+                        <li>NEVER return damaged equipment without reporting</li>
+                        <li>NEVER use non-BLUE colored equipment</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <h3>Step-by-Step Instructions</h3>
+            
+            <div class="step-card">
+                <h3>Step 1: Pre-operation Inspection & PPE</h3>
+                <div class="step-content">
+                    <ul>
+                        <li>Ensure all equipment is available and undamaged</li>
+                        <li>Verify correct site-specific PPE</li>
+                        <li>Minimum requirement: Hi-vis jacket and safety boots on all sites</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="step-card">
+                <h3>Step 2: General Cleaning</h3>
+                <div class="step-content">
+                    <ul>
+                        <li>Familiarize yourself with designated storage area</li>
+                        <li>Use ISM Search and BLUE cleaning equipment only (cloth, bucket, mop, etc.)</li>
+                        <li>Keep colored equipment separate from other colors</li>
+                        <li>Locate waste bins and understand recycling policy</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="step-card">
+                <h3>Step 3: Cleaning Within or Under Racking</h3>
+                <div class="step-content">
+                    <ul>
+                        <li>Wear hard hats/bump caps when working under or behind racking</li>
+                        <li>Use dust masks if necessary (available on request)</li>
+                        <li>Mark work area with caution signs/beacons for forklift operators</li>
+                        <li>Only use machines you're trained to operate</li>
+                        <li>Verify pallet stability before removal</li>
+                        <li>Ensure goods don't obstruct others</li>
+                        <li>Return goods to correct locations after cleaning</li>
+                        <li>Report damaged goods/pallets to line manager and site supervisor</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="step-card">
+                <h3>Step 4: Rodent Activity</h3>
+                <div class="step-content">
+                    <div class="warning-box">
+                        <strong>⚠️ If you encounter evidence of rodent activity (shredded material or droppings):</strong>
+                    </div>
+                    <ul>
+                        <li>Inform your line manager immediately</li>
+                        <li>Do NOT disturb the material</li>
+                        <li>Do NOT clean the area unless trained to do so</li>
+                    </ul>
+                    <p><strong>Risk:</strong> Leptospirosis (Weil's disease) can cause kidney damage, meningitis, liver failure, respiratory problems, and death.</p>
+                </div>
+            </div>
+            
+            <div class="step-card">
+                <h3>Step 5: Spillages/Breakages</h3>
+                <div class="step-content">
+                    <ul>
+                        <li>Isolate immediately using caution or wet floor signs</li>
+                        <li>Report suspected hazardous chemical spillages to supervisor/area manager</li>
+                        <li>Use appropriate equipment (e.g., absorbent booms/pads) if trained</li>
+                        <li>Keep signage in place until completely dry/removed</li>
+                        <li>Report damaged goods causing/caused by spillage</li>
+                        <li>Clean and return all equipment to storage after use</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="step-card">
+                <h3>Step 6: Dealing with Hazardous Chemicals</h3>
+                <div class="step-content">
+                    <div class="warning-box">
+                        <strong>⚠️ CRITICAL:</strong> Only trained personnel handle hazardous chemicals
+                    </div>
+                    <ul>
+                        <li>Report incidents/spillages to ISM Supervisor or Area Manager</li>
+                        <li>Isolate immediately using caution/wet floor signs</li>
+                        <li>Recognize COSHH hazard symbols on goods labels</li>
+                        <li>Refer to COSHH & COSHH ISM RA & SSOW for cleaning procedures</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="step-card">
+                <h3>Step 7: Damages</h3>
+                <div class="step-content">
+                    <ul>
+                        <li>Report damaged goods/pallets to client supervisor and ISM Supervisor/Area Manager</li>
+                        <li>Isolate with caution signs if obstructing others</li>
+                        <li>Follow client supervisor's instructions for damaged goods disposal (e.g., moving to returns area)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Validation Section -->
+        <div id="validation" class="content-section">
+            <h2>✅ Training Validation</h2>
+            
+            <div class="quiz-section">
+                <h3>Knowledge Check Questions</h3>
+                <p>To confirm your understanding, please answer the following questions:</p>
+                
+                <div class="quiz-question">
+                    <h4>Question 1</h4>
+                    <p>Where must you wear a hard hat/bump cap when cleaning?</p>
+                    <div class="quiz-answer">
+                        <strong>Answer:</strong> When working under or behind racking, or in any area with low ceiling height.
+                    </div>
+                </div>
+                
+                <div class="quiz-question">
+                    <h4>Question 2</h4>
+                    <p>In the event of an incident on site, who would you report this to?</p>
+                    <div class="quiz-answer">
+                        <strong>Answer:</strong> Your ISM Supervisor or Area Manager, and the client's supervisor on site.
+                    </div>
+                </div>
+                
+                <div class="quiz-question">
+                    <h4>Question 3</h4>
+                    <p>What is the first thing you must do if you see/create a spillage/breakage?</p>
+                    <div class="quiz-answer">
+                        <strong>Answer:</strong> Isolate it immediately using caution signs or wet floor signs.
+                    </div>
+                </div>
+                
+                <div class="quiz-question">
+                    <h4>Question 4</h4>
+                    <p>What other safe systems of work relate to Warehouse Housekeeping? Have you read them?</p>
+                    <div class="quiz-answer">
+                        <strong>Answer:</strong> COSHH & COSHH ISM RA & SSOW, and Manual Handling Pallets RA & SSOW.
+                    </div>
+                </div>
+                
+                <div class="quiz-question">
+                    <h4>Question 5</h4>
+                    <p>If you have finished using a piece of equipment and do not require it again, what should you do?</p>
+                    <div class="quiz-answer">
+                        <strong>Answer:</strong> Return it in a clean and tidy state to its designated storage area.
+                    </div>
+                </div>
+                
+                <div class="quiz-question">
+                    <h4>Question 6</h4>
+                    <p>What might you need if working underneath/within the racking?</p>
+                    <div class="quiz-answer">
+                        <strong>Answer:</strong> Bump cap/hard hat (mandatory), dust mask (if necessary), caution signs/beacons, and appropriate cleaning equipment.
+                    </div>
+                </div>
+            </div>
+            
+            <h3>Training Confirmation</h3>
+            
+            <div class="signature-section">
+                <div class="signature-box">
+                    <h4>Trainee Confirmation</h4>
+                    <p style="margin-bottom: 20px; font-size: 14px; line-height: 1.6;">
+                        I was given the opportunity to ask questions about the tasks and I fully understand the requirements of the Safe System of Work (SSOW). I will perform the tasks in accordance with the requirements of the SSOW. I can confirm I have read and understood the risk assessment and have been made aware of associated risks/hazards.
+                    </p>
+                    
+                    <div class="signature-field">
+                        <label>Employee Name:</label>
+                        <input type="text" placeholder="Enter your full name">
+                    </div>
+                    
+                    <div class="signature-field">
+                        <label>Signature:</label>
+                        <input type="text" placeholder="Type your name as signature">
+                    </div>
+                    
+                    <div class="signature-field">
+                        <label>Date of Training:</label>
+                        <input type="date">
+                    </div>
+                </div>
+                
+                <div class="signature-box">
+                    <h4>Trainer Confirmation</h4>
+                    <p style="margin-bottom: 20px; font-size: 14px; line-height: 1.6;">
+                        I confirm that the named colleague has been instructed in all aspects relating to the SSOW and fully understands the need to comply with the requirements of the SSOW when performing the tasks. I can confirm that I have explained all aspects of the risk assessment and its associated risks/hazards.
+                    </p>
+                    
+                    <div class="signature-field">
+                        <label>Trainer's Name:</label>
+                        <input type="text" placeholder="Enter trainer's full name">
+                    </div>
+                    
+                    <div class="signature-field">
+                        <label>Signature:</label>
+                        <input type="text" placeholder="Type name as signature">
+                    </div>
+                    
+                    <div class="signature-field">
+                        <label>Date of Training:</label>
+                        <input type="date">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="warning-box" style="margin-top: 30px;">
+                <strong>Document Authorization:</strong>
+                <p style="margin-top: 10px;">Approved & Authorized by Head of Continuous Improvement and Compliance</p>
+                <p><strong>Date:</strong> 09/07/2025</p>
+            </div>
+        </div>
+        
+        <button class="print-button" onclick="window.print()">🖨️ Print Training Package</button>
     </div>
-
-    <div class="layout" id="app">
-      <aside class="nav card" aria-label="Table of contents">
-        <h3>Course navigation</h3>
-        <ul class="toc" id="toc">
-          <!-- items inserted by JS -->
-        </ul>
-
-        <div style="margin-top:16px">
-          <div class="small">Progress</div>
-          <div class="progress" aria-hidden><i id="progressBar"></i></div>
-          <div class="small" style="margin-top:8px">Score: <span id="scoreLabel">0</span>/6</div>
-        </div>
-
-        <div style="margin-top:18px">
-          <div class="small">Controls</div>
-          <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
-            <button class="btn ghost" onclick="resetCourse()" title="Reset progress">Reset</button>
-            <button class="btn" onclick="downloadReport()">Download Report</button>
-          </div>
-        </div>
-
-      </aside>
-
-      <main>
-        <section class="card content" id="pageContainer" tabindex="0" aria-live="polite">
-          <!-- pages render here -->
-        </section>
-
-        <div class="controls" role="navigation" aria-label="Course controls">
-          <div>
-            <button class="btn" id="prevBtn" onclick="prevPage()">← Previous</button>
-            <button class="btn" id="nextBtn" onclick="nextPage()">Next →</button>
-          </div>
-          <div>
-            <button class="btn ghost" onclick="openTOC()">Table of Contents</button>
-            <button class="btn primary" onclick="goToPage('quiz')">Go to Quiz</button>
-          </div>
-        </div>
-      </main>
-    </div>
-  </div>
-
-<script>
-/* ---------- Course content (pulled/arranged from the uploaded PDF) ---------- */
-/* Each page: id, title, html content */
-const pages = [
-  {
-    id: 'intro',
-    title: 'Introduction & Overview',
-    html: `
-      <h2>Introduction</h2>
-      <p><strong>Purpose:</strong> General upkeep of the warehouse to ensure a safe and efficient working environment.</p>
-      <p class="small">This training is based on the Warehouse Housekeeping Risk Assessment & Safe System of Work (SSOW). Refer to the source document for full formal versions. :contentReference[oaicite:2]{index=2}</p>
-      <h3>Highest Risk Rating</h3>
-      <p><em>Adequate</em> (as recorded in the assessment)</p>
-      <h3>Key hazards highlighted</h3>
-      <ul>
-        <li>Slip, trip and fall</li>
-        <li>Manual handling injuries</li>
-        <li>Vehicle movements (MHE)</li>
-        <li>Dust</li>
-        <li>Chemicals (COSHH)</li>
-        <li>Leptospirosis (rodent droppings)</li>
-      </ul>
-    `
-  },
-
-  {
-    id: 'risk-analysis',
-    title: 'Risk Analysis & Controls',
-    html: `
-      <h2>Risk Analysis</h2>
-      <p>The PDF contains a stepwise risk analysis. Each hazard lists who might be harmed, how, and control measures. Example entries:</p>
-      <ul>
-        <li><strong>Objects falling from height</strong> — comply with four pick slot separation when reach trucks work at height.</li>
-        <li><strong>Spillages</strong> — isolate immediately with wet floor signs and retrieve appropriate PPE/tools.</li>
-        <li><strong>Dealing with hazardous chemicals</strong> — only COSHH trained staff should handle hazardous chemical incidents.</li>
-      </ul>
-      <p class="small">Residual risk levels and responsibility columns in the original document describe who must implement further controls. :contentReference[oaicite:3]{index=3}</p>
-    `
-  },
-
-  {
-    id: 'precautions',
-    title: 'Precautions & PPE',
-    html: `
-      <h2>Precautions to reduce risks</h2>
-      <ul>
-        <li>All operatives should undertake client induction to understand site-specific movements and walkways.</li>
-        <li>Only keep tools you currently use close by; return unused tools to designated storage.</li>
-      </ul>
-      <h3>PPE (minimum)</h3>
-      <ul>
-        <li>Hi-vis jacket and safety boots (site minimum)</li>
-        <li>Bump cap / hard hat when under/behind racking</li>
-        <li>Dust masks available for dusty areas</li>
-        <li>Gloves (anti-cut when handling glass/sharp objects)</li>
-      </ul>
-    `
-  },
-
-  {
-    id: 'ssow',
-    title: 'Safe System of Work (SSOW)',
-    html: `
-      <h2>Safe System of Work — Method of safe working</h2>
-      <ol>
-        <li>Inspect equipment and ensure correct PPE.</li>
-        <li>General cleaning using ISM blue cleaning equipment.</li>
-        <li>Cleaning within or under racking — use bump caps and signage.</li>
-        <li>Rodent activity — do not disturb; inform line manager.</li>
-        <li>Cleaning spillages/breakages — isolate with signage and use absorbents.</li>
-        <li>Dealing with hazardous chemicals — only trained personnel; isolate area.</li>
-        <li>Reporting and isolating damaged goods and pallets.</li>
-      </ol>
-      <p class="small"><strong>Do’s & Don’ts</strong> — highlights from the SSOW include: never undertake untrained tasks (COSHH), always use signage, always return cleaning equipment clean to storage, always report incidents, always follow walkway rules, and observe 4 m separation in aisles.</p>
-    `
-  },
-
-  {
-    id: 'steps',
-    title: 'Steps 1–7 (Detailed Procedures)',
-    html: `
-      <h2>Steps (Details)</h2>
-      <h3>Step 1: Pre-operation inspection & PPE</h3>
-      <p>Ensure equipment is undamaged and correct PPE is selected for the site.</p>
-      <h3>Step 2: General cleaning</h3>
-      <p>Use ISM blue cleaning equipment for the warehouse. Keep coloured equipment separate.</p>
-      <h3>Step 3: Cleaning within/under racking</h3>
-      <p>Wear bump caps, use caution signs/beacons; ensure pallets are stable and trained personnel operate machines.</p>
-      <h3>Step 4: Rodent activity</h3>
-      <p>Report; do not disturb droppings; only trained staff should clean infected areas.</p>
-      <h3>Step 5: Spillages & breakages</h3>
-      <p>Isolate with signage, use absorbent materials, report damaged goods.</p>
-      <h3>Step 6: Hazardous chemicals</h3>
-      <p>Report incidents; only trained staff; see COSHH procedures in the full SSOW.</p>
-      <h3>Step 7: Damages</h3>
-      <p>Report and isolate damaged goods/pallets. Follow client supervisor guidance.</p>
-    `
-  },
-
-  {
-    id: 'quiz',
-    title: 'Quiz: Validate your understanding',
-    html: `
-      <h2>Quiz</h2>
-      <p>To confirm understanding, complete the questions below. You may have more than one correct answer on some questions — this quiz is configured as single best answer per question for clarity. You will get immediate feedback and a final score.</p>
-      <div id="quizArea"></div>
-      <div id="quizResult" style="margin-top:12px"></div>
-    `
-  },
-
-  {
-    id: 'certificate',
-    title: 'Certificate & Completion',
-    html: `
-      <div class="certificate">
-        <h2>Training Completion</h2>
-        <p id="certText">Complete the quiz to view your certificate.</p>
-        <div style="margin-top:14px">
-          <button class="btn primary" onclick="printCertificate()">Print Certificate</button>
-          <button class="btn" onclick="downloadReport()">Download Report</button>
-        </div>
-      </div>
-    `
-  }
-];
-
-/* ---------- Quiz (mapped from the PDF's trainee confirmation questions) ---------- */
-const quizQuestions = [
-  {
-    id: 'q1',
-    q: 'Where must you wear a hard hat / bump cap when cleaning?',
-    options: [
-      {text: 'When working open yard only', correct: false},
-      {text: 'When working underneath or behind racking', correct: true},
-      {text: 'Only when using a pressure washer', correct: false},
-      {text: 'Whenever a supervisor tells you', correct: false}
-    ],
-    explain: 'Bump caps/hard hats are required when working under or behind racking to protect from head injuries.' 
-  },
-  {
-    id: 'q2',
-    q: 'In the event of an incident on site, who should you report it to?',
-    options: [
-      {text: 'Your line manager or site supervisor', correct: true},
-      {text: 'The client’s customers', correct: false},
-      {text: 'Only the police', correct: false},
-      {text: 'No one if it is minor', correct: false}
-    ],
-    explain: 'Incidents should be reported to your line manager and the site supervisor as per the SSOW.' 
-  },
-  {
-    id: 'q3',
-    q: 'What is the first thing you must do if you see/create a spillage/breakage?',
-    options: [
-      {text: 'Keep working and avoid the area', correct: false},
-      {text: 'Isolate the area with caution/wet floor signs immediately', correct: true},
-      {text: 'Call a friend to help move items', correct: false},
-      {text: 'Wait until the end of shift', correct: false}
-    ],
-    explain: 'Always isolate spillages immediately with signage to protect others and allow safe clean up.' 
-  },
-  {
-    id: 'q4',
-    q: 'What other safe systems of work relate to Warehouse Housekeeping? (example selection)',
-    options: [
-      {text: 'Manual handling and COSHH procedures', correct: true},
-      {text: 'Only office security procedures', correct: false},
-      {text: 'None — housekeeping is standalone', correct: false},
-      {text: 'Only IT policies', correct: false}
-    ],
-    explain: 'Warehouse housekeeping links closely with Manual Handling and COSHH among other site-specific SSOWs.' 
-  },
-  {
-    id: 'q5',
-    q: 'If you have finished using a piece of equipment and do not require it again, what should you do?',
-    options: [
-      {text: 'Leave it where it is for the next person', correct: false},
-      {text: 'Return it to its designated storage area clean and tidy', correct: true},
-      {text: 'Hide it in another aisle', correct: false},
-      {text: 'Throw it away', correct: false}
-    ],
-    explain: 'Equipment should be returned clean to the designated storage area to prevent trips and contamination.' 
-  },
-  {
-    id: 'q6',
-    q: 'What might you need if working underneath / within the racking?',
-    options: [
-      {text: 'Bump cap / hard hat and possibly a dust mask', correct: true},
-      {text: 'A loudspeaker', correct: false},
-      {text: 'Only sunglasses', correct: false},
-      {text: 'No special PPE', correct: false}
-    ],
-    explain: 'Bump cap/hard hat and dust masks (if dusty) are specified when working under racking.' 
-  }
-];
-
-/* ---------- App state and functions ---------- */
-let state = {
-  pageIndex: 0,
-  order: pages.map(p=>p.id),
-  answers: JSON.parse(localStorage.getItem('warehouse.answers')||'{}')
-};
-
-const tocEl = document.getElementById('toc');
-const container = document.getElementById('pageContainer');
-const progressBar = document.getElementById('progressBar');
-const scoreLabel = document.getElementById('scoreLabel');
-
-function renderTOC(){
-  tocEl.innerHTML = '';
-  pages.forEach((p, idx)=>{
-    const li = document.createElement('li');
-    const btn = document.createElement('button');
-    btn.textContent = (idx+1)+'. '+p.title;
-    btn.className = (idx===state.pageIndex)?'active':'';
-    btn.onclick = ()=>{ goToIndex(idx); };
-    li.appendChild(btn);
-    tocEl.appendChild(li);
-  });
-}
-
-function renderPage(){
-  const p = pages[state.pageIndex];
-  container.innerHTML = p.html;
-  // If this is the quiz page, build the quiz UI
-  if(p.id === 'quiz') renderQuiz();
-  // Update controls & TOC active state
-  renderTOC();
-  updateProgress();
-  // focus container for accessibility
-  container.focus();
-}
-
-function goToIndex(i){
-  state.pageIndex = i;
-  saveState();
-  renderPage();
-}
-
-function goToPage(id){
-  const i = pages.findIndex(p=>p.id===id);
-  if(i>=0) { goToIndex(i); }
-}
-
-function nextPage(){ if(state.pageIndex < pages.length-1){ state.pageIndex++; saveState(); renderPage(); } }
-function prevPage(){ if(state.pageIndex > 0){ state.pageIndex--; saveState(); renderPage(); } }
-function openTOC(){ document.querySelector('.nav').scrollIntoView({behavior:'smooth'}); }
-
-function updateProgress(){
-  const pct = Math.round(((state.pageIndex) / (pages.length-1)) * 100);
-  progressBar.style.width = pct + '%';
-  scoreLabel.textContent = getScore();
-  // update active toc class
-  document.querySelectorAll('.toc button').forEach((btn, idx)=>{
-    btn.classList.toggle('active', idx===state.pageIndex);
-  });
-}
-
-/* ---------- Quiz rendering and logic ---------- */
-function renderQuiz(){
-  const area = document.getElementById('quizArea');
-  area.innerHTML = '';
-  quizQuestions.forEach((q, qi)=>{
-    const qDiv = document.createElement('div');
-    qDiv.className = 'question';
-    qDiv.id = 'quest_'+q.id;
-    qDiv.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center">
-        <div><strong>Q${qi+1}.</strong> ${q.q}</div>
-        <div><span class="badge">Question ${qi+1}</span></div>
-      </div>`;
-    const opts = document.createElement('div');
-    opts.className = 'options';
-    q.options.forEach((opt, oi)=>{
-      const optWrap = document.createElement('label');
-      optWrap.className = 'option';
-      optWrap.tabIndex = 0;
-      const input = document.createElement('input');
-      input.type = 'radio';
-      input.name = q.id;
-      input.value = oi;
-      // preselect if user answered before
-      if(state.answers[q.id] === oi.toString()) input.checked = true;
-      input.onchange = ()=>{ submitAnswer(q.id, oi); };
-      optWrap.appendChild(input);
-      const span = document.createElement('span');
-      span.textContent = opt.text;
-      optWrap.appendChild(span);
-      opts.appendChild(optWrap);
-    });
-    qDiv.appendChild(opts);
-
-    // feedback area
-    const fb = document.createElement('div');
-    fb.className = 'feedback';
-    fb.id = 'fb_'+q.id;
-    // if already answered, show feedback
-    if(state.answers[q.id] !== undefined){
-      showFeedback(q.id);
-    }
-    qDiv.appendChild(fb);
-    area.appendChild(qDiv);
-  });
-
-  // Add submit all / score button
-  const submitWrap = document.createElement('div');
-  submitWrap.style.marginTop = '12px';
-  const checkBtn = document.createElement('button');
-  checkBtn.className = 'btn primary';
-  checkBtn.textContent = 'Check my score';
-  checkBtn.onclick = ()=>{ showFinalScore(true); };
-  submitWrap.appendChild(checkBtn);
-  area.appendChild(submitWrap);
-}
-
-function submitAnswer(qid, optIndex){
-  state.answers[qid] = optIndex.toString();
-  localStorage.setItem('warehouse.answers', JSON.stringify(state.answers));
-  showFeedback(qid);
-  updateProgress();
-}
-
-function showFeedback(qid){
-  const q = quizQuestions.find(x=>x.id===qid);
-  const fb = document.getElementById('fb_'+qid);
-  const selected = state.answers[qid];
-  if(selected === undefined){ fb.innerHTML = ''; return; }
-  const selIdx = parseInt(selected,10);
-  const chosen = q.options[selIdx];
-  if(chosen && chosen.correct){
-    fb.innerHTML = `<div style="color:green;font-weight:700">Correct ✓</div><div class="small">${q.explain}</div>`;
-  } else {
-    // reveal correct option(s)
-    const correctText = q.options.find(o=>o.correct).text;
-    fb.innerHTML = `<div style="color:#c0392b;font-weight:700">Incorrect ✕</div>
-      <div class="small">Correct answer: <strong>${correctText}</strong></div>
-      <div class="small" style="margin-top:6px">${q.explain}</div>`;
-  }
-}
-
-/* ---------- Scoring, certificate, report ---------- */
-function getScore(){
-  let score = 0;
-  quizQuestions.forEach(q=>{
-    const ans = state.answers[q.id];
-    if(ans !== undefined && q.options[parseInt(ans,10)]?.correct) score++;
-  });
-  return score;
-}
-
-function showFinalScore(showCertIfPassed=false){
-  const result = document.getElementById('quizResult');
-  const score = getScore();
-  result.innerHTML = `<div class="card" style="padding:12px"><strong>Your score: ${score}/${quizQuestions.length}</strong>
-    <div class="small" style="margin-top:8px">${score === quizQuestions.length ? 'Excellent — you answered all questions correctly.' : 'Review feedback on incorrect questions and try again.'}</div></div>`;
-  // update certificate page if user passed (here require 80% or full pass)
-  const certText = (score >= Math.ceil(quizQuestions.length*0.8))
-    ? \`<strong>Passed</strong> — Score: \${score}/\${quizQuestions.length}. You may print your certificate below.\`
-    : \`<strong>Not passed</strong> — Score: \${score}/\${quizQuestions.length}. Review the lessons and retake the quiz.\`;
-  // store last result
-  localStorage.setItem('warehouse.lastScore', JSON.stringify({score, date: new Date().toISOString()}));
-  // update certificate page content
-  const certPage = pages.find(p=>p.id==='certificate');
-  certPage.html = \`
-    <div class="certificate">
-      <h2>Training Completion</h2>
-      <p id="certText">\${certText}</p>
-      <p class="small">Document source: Warehouse Housekeeping RA & SSOW. :contentReference[oaicite:4]{index=4}</p>
-      <div style="margin-top:14px">
-        <button class="btn primary" onclick="printCertificate()">Print Certificate</button>
-        <button class="btn" onclick="downloadReport()">Download Report</button>
-      </div>
-    </div>\`;
-  // If requested, navigate to certificate
-  if(showCertIfPassed) goToPage('certificate');
-  updateProgress();
-}
-
-/* Create a printable certificate window */
-function printCertificate(){
-  const last = JSON.parse(localStorage.getItem('warehouse.lastScore')||'null');
-  const name = prompt('Enter trainee name for certificate (optional):') || 'Trainee';
-  const passed = last && last.score >= Math.ceil(quizQuestions.length*0.8);
-  const certHtml = \`
-    <html><head><title>Certificate</title>
-    <style>body{font-family:Arial,Helvetica,sans-serif;text-align:center;padding:40px} .card{border:4px solid #0b63d6;padding:22px;border-radius:12px;display:inline-block}</style>
-    </head><body>
-      <div class="card">
-        <h1>Certificate of Completion</h1>
-        <p style="margin-top:6px">This certifies that</p>
-        <h2>\${name}</h2>
-        <p style="margin-top:6px">\${passed ? 'has successfully completed' : 'has completed' } the Warehouse Housekeeping training</p>
-        <p style="margin-top:6px">Score: \${last ? last.score : 'N/A'} / \${quizQuestions.length}</p>
-        <p style="margin-top:14px;font-size:12px;color:#666">Source: ISM-HS-SSOW/RA-008 — Warehouse Housekeeping</p>
-        <p style="margin-top:20px">Date: \${new Date().toLocaleDateString()}</p>
-      </div>
-      <script>window.print();</script>
-    </body></html>\`;
-  const w = window.open('', '_blank');
-  w.document.write(certHtml);
-  w.document.close();
-}
-
-/* Download a simple report (JSON) */
-function downloadReport(){
-  const report = {
-    document: 'Warehouse Housekeeping training',
-    source_file: 'Uploaded PDF (user provided)',
-    score: getScore(),
-    answers: state.answers,
-    completedAt: new Date().toISOString()
-  };
-  const blob = new Blob([JSON.stringify(report, null, 2)], {type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'warehouse_training_report.json';
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
-}
-
-/* Reset course (clear answers & progress) */
-function resetCourse(){
-  if(!confirm('Reset course progress and answers?')) return;
-  state.answers = {};
-  localStorage.removeItem('warehouse.answers');
-  localStorage.removeItem('warehouse.lastScore');
-  state.pageIndex = 0;
-  saveState();
-  renderPage();
-}
-
-/* Save basic state */
-function saveState(){ localStorage.setItem('warehouse.pageIndex', state.pageIndex); localStorage.setItem('warehouse.answers', JSON.stringify(state.answers)); }
-
-/* Load persisted state */
-function loadState(){
-  const p = parseInt(localStorage.getItem('warehouse.pageIndex')||'0',10);
-  if(Number.isFinite(p)) state.pageIndex = Math.min(Math.max(0,p), pages.length-1);
-  const saved = JSON.parse(localStorage.getItem('warehouse.answers')||'{}');
-  state.answers = saved || {};
-}
-
-/* Init */
-function init(){
-  loadState();
-  renderTOC();
-  renderPage();
-  // if quiz already answered, recompute last score
-  if(Object.keys(state.answers).length) showFinalScore(false);
-}
-
-/* Keyboard navigation (left / right) */
-document.addEventListener('keydown', (e)=>{
-  if(e.key === 'ArrowRight') nextPage();
-  if(e.key === 'ArrowLeft') prevPage();
-});
-
-init();
-</script>
+    
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.nav-tabs button');
+            buttons.forEach(button => button.classList.remove('active'));
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
 </body>
 </html>
