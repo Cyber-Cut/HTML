@@ -185,7 +185,11 @@ function downloadReport(){
   const report = { document: 'Warehouse Housekeeping training', source_file: 'Uploaded PDF (user provided)', score: getScore(), answers: state.answers, completedAt: new Date().toISOString() };
   const blob = new Blob([JSON.stringify(report, null, 2)], {type:'application/json'});
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url; a.download = 'warehouse_training_report.json'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  const a = document.createElement('a'); 
+a.href = url; a.download = 'warehouse_training_report.json';
+document.body.appendChild(a);
+a.click(); a.remove();
+URL.revokeObjectURL(url);
 }
 
 function resetCourse(){ if(!confirm('Reset course progress and answers?')) return; state.answers = {}; localStorage.removeItem('warehouse.answers'); localStorage.removeItem('warehouse.lastScore'); state.pageIndex = 0; saveState(); renderPage(); }
