@@ -101,12 +101,7 @@ function nextPage(){ if(state.pageIndex < pages.length-1){ state.pageIndex++; sa
 function prevPage(){ if(state.pageIndex > 0){ state.pageIndex--; saveState(); renderPage(); } }
 function openTOC(){ document.querySelector('.nav').scrollIntoView({behavior:'smooth'}); }
 function updateProgress(){ const pct = Math.round(((state.pageIndex) / (pages.length-1)) * 100); progressBar.style.width = pct + '%'; scoreLabel.textContent = getScore(); document.querySelectorAll('.toc button').forEach((btn, idx)=>{ btn.classList.toggle('active', idx===state.pageIndex); }); }
-
-function renderQuiz(){
-  const area = document.getElementById('quizArea');
-  area.innerHTML = '';
-  quizQuestions.forEach((q, qi)=>{
-    const qDiv = document.createElement('div');
+function renderQuiz(){ const area = document.getElementById('quizArea'); area.innerHTML = ''; quizQuestions.forEach((q, qi)=>{ const qDiv = document.createElement('div');
     qDiv.className = 'question';
     qDiv.id = 'quest_'+q.id;
     qDiv.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><div><strong>Q${'${'}qi+1}${'}'}.</strong> ${'${'}q.q}${'}'}</div><div><span class="badge">Question ${'${'}qi+1}${'}'}</span></div></div>`;
