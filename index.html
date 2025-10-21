@@ -1,110 +1,558 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Manager's Report</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      background-color: #f8f8f8;
-    }
-    h2 {
-      margin-top: 30px;
-    }
-    textarea {
-      width: 100%;
-      height: 100px;
-      margin-bottom: 10px;
-      padding: 10px;
-      font-size: 14px;
-    }
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      margin-top: 20px;
-    }
-    #output {
-      background: #fff;
-      padding: 20px;
-      border: 1px solid #ccc;
-      margin-top: 30px;
-    }
-    #output h3 {
-      margin-top: 20px;
-    }
-    .timestamp {
-      font-size: 14px;
-      color: #666;
-      margin-bottom: 20px;
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Warehouse Housekeeping — Training</title>
+<style>
+  :root{
+    --bg:#f6f7fb; --card:#fff; --accent:#0b63d6; --muted:#6b7280;
+  }
+  html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;}
+  body{background:linear-gradient(180deg,var(--bg),#eef2f7);color:#111;}
+  .app{max-width:980px;margin:28px auto;padding:18px;}
+  .header{display:flex;align-items:center;gap:14px;margin-bottom:12px;}
+  .logo{width:56px;height:56px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#1ea7ff);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;}
+  h1{font-size:20px;margin:0;}
+  .meta{color:var(--muted);font-size:13px;}
+  .layout{display:grid;grid-template-columns:240px 1fr;gap:18px;margin-top:18px;}
+  .nav{background:var(--card);border-radius:10px;padding:14px;box-shadow:0 6px 18px rgba(12,12,20,0.06);height:calc(100vh - 180px);position:sticky;top:24px;overflow:auto;}
+  .nav h3{margin:0 0 8px 0;font-size:13px;color:var(--muted)}
+  .toc{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px;}
+  .toc button{appearance:none;border:0;background:transparent;text-align:left;padding:8px;border-radius:8px;cursor:pointer;font-size:14px;color:#0b1220;}
+  .toc button.active{background:rgba(11,99,214,0.08);color:var(--accent);font-weight:600;}
+  .card{background:var(--card);padding:22px;border-radius:12px;box-shadow:0 8px 24px rgba(12,12,20,0.06);}
+  .content{min-height:420px;}
+  .controls{display:flex;justify-content:space-between;align-items:center;margin-top:14px;gap:10px;}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:9px 12px;border-radius:10px;border:0;cursor:pointer;font-weight:600;}
+  .btn.primary{background:var(--accent);color:#fff;}
+  .btn.ghost{background:transparent;border:1px solid #e6eefb;color:var(--accent);}
+  .progress{height:8px;background:#e6eefb;border-radius:8px;overflow:hidden;margin-top:12px;}
+  .progress > i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),#1ea7ff);width:0%;}
+  .question{border:1px solid #eef4ff;background:#fbfdff;padding:14px;border-radius:8px;margin-top:12px;}
+  .options{display:flex;flex-direction:column;gap:8px;margin-top:10px;}
+  .option{display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;border:1px solid transparent;cursor:pointer;}
+  .option input{margin:0;}
+  .option:hover{background:#f1f7ff;}
+  .feedback{margin-top:8px;font-size:14px;}
+  .badge{display:inline-block;padding:6px 8px;border-radius:999px;background:#eef7ff;color:var(--accent);font-weight:700;font-size:12px;}
+  .small{font-size:13px;color:var(--muted);}
+  .certificate{padding:20px;text-align:center;}
+  @media (max-width:920px){.layout{grid-template-columns:1fr;}.nav{position:relative;height:auto;}}
+</style>
 </head>
 <body>
+  <div class="app" role="application" aria-label="Warehouse Housekeeping Training">
+    <div class="header">
+      <div class="logo">WH</div>
+      <div>
+        <h1>Warehouse Housekeeping — Training</h1>
+        <div class="meta">Based on provided Warehouse Housekeeping RA & SSOW. :contentReference[oaicite:1]{index=1}</div>
+      </div>
+    </div>
 
-  <h1>Manager's Daily Report</h1>
+    <div class="layout" id="app">
+      <aside class="nav card" aria-label="Table of contents">
+        <h3>Course navigation</h3>
+        <ul class="toc" id="toc">
+          <!-- items inserted by JS -->
+        </ul>
 
-  <form id="reportForm">
-    <h2>Health & Safety:</h2>
-    <textarea name="healthSafety"></textarea>
+        <div style="margin-top:16px">
+          <div class="small">Progress</div>
+          <div class="progress" aria-hidden><i id="progressBar"></i></div>
+          <div class="small" style="margin-top:8px">Score: <span id="scoreLabel">0</span>/6</div>
+        </div>
 
-    <h2>Machines / Equipment:</h2>
-    <textarea name="machines"></textarea>
+        <div style="margin-top:18px">
+          <div class="small">Controls</div>
+          <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn ghost" onclick="resetCourse()" title="Reset progress">Reset</button>
+            <button class="btn" onclick="downloadReport()">Download Report</button>
+          </div>
+        </div>
 
-    <h2>Team & Recruitment:</h2>
-    <textarea name="team"></textarea>
+      </aside>
 
-    <h2>Client Engagement:</h2>
-    <textarea name="client"></textarea>
+      <main>
+        <section class="card content" id="pageContainer" tabindex="0" aria-live="polite">
+          <!-- pages render here -->
+        </section>
 
-    <h2>Hours Delivery:</h2>
-    <textarea name="hours"></textarea>
+        <div class="controls" role="navigation" aria-label="Course controls">
+          <div>
+            <button class="btn" id="prevBtn" onclick="prevPage()">← Previous</button>
+            <button class="btn" id="nextBtn" onclick="nextPage()">Next →</button>
+          </div>
+          <div>
+            <button class="btn ghost" onclick="openTOC()">Table of Contents</button>
+            <button class="btn primary" onclick="goToPage('quiz')">Go to Quiz</button>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
 
-    <h2>UKG / IT:</h2>
-    <textarea name="ukg"></textarea>
+<script>
+/* ---------- Course content (pulled/arranged from the uploaded PDF) ---------- */
+/* Each page: id, title, html content */
+const pages = [
+  {
+    id: 'intro',
+    title: 'Introduction & Overview',
+    html: `
+      <h2>Introduction</h2>
+      <p><strong>Purpose:</strong> General upkeep of the warehouse to ensure a safe and efficient working environment.</p>
+      <p class="small">This training is based on the Warehouse Housekeeping Risk Assessment & Safe System of Work (SSOW). Refer to the source document for full formal versions. :contentReference[oaicite:2]{index=2}</p>
+      <h3>Highest Risk Rating</h3>
+      <p><em>Adequate</em> (as recorded in the assessment)</p>
+      <h3>Key hazards highlighted</h3>
+      <ul>
+        <li>Slip, trip and fall</li>
+        <li>Manual handling injuries</li>
+        <li>Vehicle movements (MHE)</li>
+        <li>Dust</li>
+        <li>Chemicals (COSHH)</li>
+        <li>Leptospirosis (rodent droppings)</li>
+      </ul>
+    `
+  },
 
-    <h2>Audits:</h2>
-    <textarea name="audits"></textarea>
+  {
+    id: 'risk-analysis',
+    title: 'Risk Analysis & Controls',
+    html: `
+      <h2>Risk Analysis</h2>
+      <p>The PDF contains a stepwise risk analysis. Each hazard lists who might be harmed, how, and control measures. Example entries:</p>
+      <ul>
+        <li><strong>Objects falling from height</strong> — comply with four pick slot separation when reach trucks work at height.</li>
+        <li><strong>Spillages</strong> — isolate immediately with wet floor signs and retrieve appropriate PPE/tools.</li>
+        <li><strong>Dealing with hazardous chemicals</strong> — only COSHH trained staff should handle hazardous chemical incidents.</li>
+      </ul>
+      <p class="small">Residual risk levels and responsibility columns in the original document describe who must implement further controls. :contentReference[oaicite:3]{index=3}</p>
+    `
+  },
 
-    <h2>A.O.B:</h2>
-    <textarea name="aob"></textarea>
+  {
+    id: 'precautions',
+    title: 'Precautions & PPE',
+    html: `
+      <h2>Precautions to reduce risks</h2>
+      <ul>
+        <li>All operatives should undertake client induction to understand site-specific movements and walkways.</li>
+        <li>Only keep tools you currently use close by; return unused tools to designated storage.</li>
+      </ul>
+      <h3>PPE (minimum)</h3>
+      <ul>
+        <li>Hi-vis jacket and safety boots (site minimum)</li>
+        <li>Bump cap / hard hat when under/behind racking</li>
+        <li>Dust masks available for dusty areas</li>
+        <li>Gloves (anti-cut when handling glass/sharp objects)</li>
+      </ul>
+    `
+  },
 
-    <button type="button" onclick="submitReport()">Submit Report</button>
-  </form>
+  {
+    id: 'ssow',
+    title: 'Safe System of Work (SSOW)',
+    html: `
+      <h2>Safe System of Work — Method of safe working</h2>
+      <ol>
+        <li>Inspect equipment and ensure correct PPE.</li>
+        <li>General cleaning using ISM blue cleaning equipment.</li>
+        <li>Cleaning within or under racking — use bump caps and signage.</li>
+        <li>Rodent activity — do not disturb; inform line manager.</li>
+        <li>Cleaning spillages/breakages — isolate with signage and use absorbents.</li>
+        <li>Dealing with hazardous chemicals — only trained personnel; isolate area.</li>
+        <li>Reporting and isolating damaged goods and pallets.</li>
+      </ol>
+      <p class="small"><strong>Do’s & Don’ts</strong> — highlights from the SSOW include: never undertake untrained tasks (COSHH), always use signage, always return cleaning equipment clean to storage, always report incidents, always follow walkway rules, and observe 4 m separation in aisles.</p>
+    `
+  },
 
-  <div id="output"></div>
+  {
+    id: 'steps',
+    title: 'Steps 1–7 (Detailed Procedures)',
+    html: `
+      <h2>Steps (Details)</h2>
+      <h3>Step 1: Pre-operation inspection & PPE</h3>
+      <p>Ensure equipment is undamaged and correct PPE is selected for the site.</p>
+      <h3>Step 2: General cleaning</h3>
+      <p>Use ISM blue cleaning equipment for the warehouse. Keep coloured equipment separate.</p>
+      <h3>Step 3: Cleaning within/under racking</h3>
+      <p>Wear bump caps, use caution signs/beacons; ensure pallets are stable and trained personnel operate machines.</p>
+      <h3>Step 4: Rodent activity</h3>
+      <p>Report; do not disturb droppings; only trained staff should clean infected areas.</p>
+      <h3>Step 5: Spillages & breakages</h3>
+      <p>Isolate with signage, use absorbent materials, report damaged goods.</p>
+      <h3>Step 6: Hazardous chemicals</h3>
+      <p>Report incidents; only trained staff; see COSHH procedures in the full SSOW.</p>
+      <h3>Step 7: Damages</h3>
+      <p>Report and isolate damaged goods/pallets. Follow client supervisor guidance.</p>
+    `
+  },
 
-  <script>
-    function submitReport() {
-      const form = document.forms["reportForm"];
-      const fields = {
-        "Health & Safety": form["healthSafety"].value,
-        "Machines / Equipment": form["machines"].value,
-        "Team & Recruitment": form["team"].value,
-        "Client Engagement": form["client"].value,
-        "Hours Delivery": form["hours"].value,
-        "UKG / IT": form["ukg"].value,
-        "Audits": form["audits"].value,
-        "A.O.B": form["aob"].value,
-      };
+  {
+    id: 'quiz',
+    title: 'Quiz: Validate your understanding',
+    html: `
+      <h2>Quiz</h2>
+      <p>To confirm understanding, complete the questions below. You may have more than one correct answer on some questions — this quiz is configured as single best answer per question for clarity. You will get immediate feedback and a final score.</p>
+      <div id="quizArea"></div>
+      <div id="quizResult" style="margin-top:12px"></div>
+    `
+  },
 
-      // Get current date & time
-      const now = new Date();
-      const dateStr = now.toLocaleDateString();
-      const timeStr = now.toLocaleTimeString();
+  {
+    id: 'certificate',
+    title: 'Certificate & Completion',
+    html: `
+      <div class="certificate">
+        <h2>Training Completion</h2>
+        <p id="certText">Complete the quiz to view your certificate.</p>
+        <div style="margin-top:14px">
+          <button class="btn primary" onclick="printCertificate()">Print Certificate</button>
+          <button class="btn" onclick="downloadReport()">Download Report</button>
+        </div>
+      </div>
+    `
+  }
+];
 
-      let outputHtml = `<h2>Manager's Report</h2>`;
-      outputHtml += `<div class="timestamp">Posted on ${dateStr} at ${timeStr}</div>`;
+/* ---------- Quiz (mapped from the PDF's trainee confirmation questions) ---------- */
+const quizQuestions = [
+  {
+    id: 'q1',
+    q: 'Where must you wear a hard hat / bump cap when cleaning?',
+    options: [
+      {text: 'When working open yard only', correct: false},
+      {text: 'When working underneath or behind racking', correct: true},
+      {text: 'Only when using a pressure washer', correct: false},
+      {text: 'Whenever a supervisor tells you', correct: false}
+    ],
+    explain: 'Bump caps/hard hats are required when working under or behind racking to protect from head injuries.' 
+  },
+  {
+    id: 'q2',
+    q: 'In the event of an incident on site, who should you report it to?',
+    options: [
+      {text: 'Your line manager or site supervisor', correct: true},
+      {text: 'The client’s customers', correct: false},
+      {text: 'Only the police', correct: false},
+      {text: 'No one if it is minor', correct: false}
+    ],
+    explain: 'Incidents should be reported to your line manager and the site supervisor as per the SSOW.' 
+  },
+  {
+    id: 'q3',
+    q: 'What is the first thing you must do if you see/create a spillage/breakage?',
+    options: [
+      {text: 'Keep working and avoid the area', correct: false},
+      {text: 'Isolate the area with caution/wet floor signs immediately', correct: true},
+      {text: 'Call a friend to help move items', correct: false},
+      {text: 'Wait until the end of shift', correct: false}
+    ],
+    explain: 'Always isolate spillages immediately with signage to protect others and allow safe clean up.' 
+  },
+  {
+    id: 'q4',
+    q: 'What other safe systems of work relate to Warehouse Housekeeping? (example selection)',
+    options: [
+      {text: 'Manual handling and COSHH procedures', correct: true},
+      {text: 'Only office security procedures', correct: false},
+      {text: 'None — housekeeping is standalone', correct: false},
+      {text: 'Only IT policies', correct: false}
+    ],
+    explain: 'Warehouse housekeeping links closely with Manual Handling and COSHH among other site-specific SSOWs.' 
+  },
+  {
+    id: 'q5',
+    q: 'If you have finished using a piece of equipment and do not require it again, what should you do?',
+    options: [
+      {text: 'Leave it where it is for the next person', correct: false},
+      {text: 'Return it to its designated storage area clean and tidy', correct: true},
+      {text: 'Hide it in another aisle', correct: false},
+      {text: 'Throw it away', correct: false}
+    ],
+    explain: 'Equipment should be returned clean to the designated storage area to prevent trips and contamination.' 
+  },
+  {
+    id: 'q6',
+    q: 'What might you need if working underneath / within the racking?',
+    options: [
+      {text: 'Bump cap / hard hat and possibly a dust mask', correct: true},
+      {text: 'A loudspeaker', correct: false},
+      {text: 'Only sunglasses', correct: false},
+      {text: 'No special PPE', correct: false}
+    ],
+    explain: 'Bump cap/hard hat and dust masks (if dusty) are specified when working under racking.' 
+  }
+];
 
-      for (let [heading, content] of Object.entries(fields)) {
-        outputHtml += `<h3><strong>${heading}</strong></h3>`;
-        outputHtml += `<p>${content.trim() || "<em>No updates.</em>"}</p>`;
-      }
+/* ---------- App state and functions ---------- */
+let state = {
+  pageIndex: 0,
+  order: pages.map(p=>p.id),
+  answers: JSON.parse(localStorage.getItem('warehouse.answers')||'{}')
+};
 
-      document.getElementById("output").innerHTML = outputHtml;
+const tocEl = document.getElementById('toc');
+const container = document.getElementById('pageContainer');
+const progressBar = document.getElementById('progressBar');
+const scoreLabel = document.getElementById('scoreLabel');
+
+function renderTOC(){
+  tocEl.innerHTML = '';
+  pages.forEach((p, idx)=>{
+    const li = document.createElement('li');
+    const btn = document.createElement('button');
+    btn.textContent = (idx+1)+'. '+p.title;
+    btn.className = (idx===state.pageIndex)?'active':'';
+    btn.onclick = ()=>{ goToIndex(idx); };
+    li.appendChild(btn);
+    tocEl.appendChild(li);
+  });
+}
+
+function renderPage(){
+  const p = pages[state.pageIndex];
+  container.innerHTML = p.html;
+  // If this is the quiz page, build the quiz UI
+  if(p.id === 'quiz') renderQuiz();
+  // Update controls & TOC active state
+  renderTOC();
+  updateProgress();
+  // focus container for accessibility
+  container.focus();
+}
+
+function goToIndex(i){
+  state.pageIndex = i;
+  saveState();
+  renderPage();
+}
+
+function goToPage(id){
+  const i = pages.findIndex(p=>p.id===id);
+  if(i>=0) { goToIndex(i); }
+}
+
+function nextPage(){ if(state.pageIndex < pages.length-1){ state.pageIndex++; saveState(); renderPage(); } }
+function prevPage(){ if(state.pageIndex > 0){ state.pageIndex--; saveState(); renderPage(); } }
+function openTOC(){ document.querySelector('.nav').scrollIntoView({behavior:'smooth'}); }
+
+function updateProgress(){
+  const pct = Math.round(((state.pageIndex) / (pages.length-1)) * 100);
+  progressBar.style.width = pct + '%';
+  scoreLabel.textContent = getScore();
+  // update active toc class
+  document.querySelectorAll('.toc button').forEach((btn, idx)=>{
+    btn.classList.toggle('active', idx===state.pageIndex);
+  });
+}
+
+/* ---------- Quiz rendering and logic ---------- */
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  area.innerHTML = '';
+  quizQuestions.forEach((q, qi)=>{
+    const qDiv = document.createElement('div');
+    qDiv.className = 'question';
+    qDiv.id = 'quest_'+q.id;
+    qDiv.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center">
+        <div><strong>Q${qi+1}.</strong> ${q.q}</div>
+        <div><span class="badge">Question ${qi+1}</span></div>
+      </div>`;
+    const opts = document.createElement('div');
+    opts.className = 'options';
+    q.options.forEach((opt, oi)=>{
+      const optWrap = document.createElement('label');
+      optWrap.className = 'option';
+      optWrap.tabIndex = 0;
+      const input = document.createElement('input');
+      input.type = 'radio';
+      input.name = q.id;
+      input.value = oi;
+      // preselect if user answered before
+      if(state.answers[q.id] === oi.toString()) input.checked = true;
+      input.onchange = ()=>{ submitAnswer(q.id, oi); };
+      optWrap.appendChild(input);
+      const span = document.createElement('span');
+      span.textContent = opt.text;
+      optWrap.appendChild(span);
+      opts.appendChild(optWrap);
+    });
+    qDiv.appendChild(opts);
+
+    // feedback area
+    const fb = document.createElement('div');
+    fb.className = 'feedback';
+    fb.id = 'fb_'+q.id;
+    // if already answered, show feedback
+    if(state.answers[q.id] !== undefined){
+      showFeedback(q.id);
     }
-  </script>
+    qDiv.appendChild(fb);
+    area.appendChild(qDiv);
+  });
 
+  // Add submit all / score button
+  const submitWrap = document.createElement('div');
+  submitWrap.style.marginTop = '12px';
+  const checkBtn = document.createElement('button');
+  checkBtn.className = 'btn primary';
+  checkBtn.textContent = 'Check my score';
+  checkBtn.onclick = ()=>{ showFinalScore(true); };
+  submitWrap.appendChild(checkBtn);
+  area.appendChild(submitWrap);
+}
+
+function submitAnswer(qid, optIndex){
+  state.answers[qid] = optIndex.toString();
+  localStorage.setItem('warehouse.answers', JSON.stringify(state.answers));
+  showFeedback(qid);
+  updateProgress();
+}
+
+function showFeedback(qid){
+  const q = quizQuestions.find(x=>x.id===qid);
+  const fb = document.getElementById('fb_'+qid);
+  const selected = state.answers[qid];
+  if(selected === undefined){ fb.innerHTML = ''; return; }
+  const selIdx = parseInt(selected,10);
+  const chosen = q.options[selIdx];
+  if(chosen && chosen.correct){
+    fb.innerHTML = `<div style="color:green;font-weight:700">Correct ✓</div><div class="small">${q.explain}</div>`;
+  } else {
+    // reveal correct option(s)
+    const correctText = q.options.find(o=>o.correct).text;
+    fb.innerHTML = `<div style="color:#c0392b;font-weight:700">Incorrect ✕</div>
+      <div class="small">Correct answer: <strong>${correctText}</strong></div>
+      <div class="small" style="margin-top:6px">${q.explain}</div>`;
+  }
+}
+
+/* ---------- Scoring, certificate, report ---------- */
+function getScore(){
+  let score = 0;
+  quizQuestions.forEach(q=>{
+    const ans = state.answers[q.id];
+    if(ans !== undefined && q.options[parseInt(ans,10)]?.correct) score++;
+  });
+  return score;
+}
+
+function showFinalScore(showCertIfPassed=false){
+  const result = document.getElementById('quizResult');
+  const score = getScore();
+  result.innerHTML = `<div class="card" style="padding:12px"><strong>Your score: ${score}/${quizQuestions.length}</strong>
+    <div class="small" style="margin-top:8px">${score === quizQuestions.length ? 'Excellent — you answered all questions correctly.' : 'Review feedback on incorrect questions and try again.'}</div></div>`;
+  // update certificate page if user passed (here require 80% or full pass)
+  const certText = (score >= Math.ceil(quizQuestions.length*0.8))
+    ? \`<strong>Passed</strong> — Score: \${score}/\${quizQuestions.length}. You may print your certificate below.\`
+    : \`<strong>Not passed</strong> — Score: \${score}/\${quizQuestions.length}. Review the lessons and retake the quiz.\`;
+  // store last result
+  localStorage.setItem('warehouse.lastScore', JSON.stringify({score, date: new Date().toISOString()}));
+  // update certificate page content
+  const certPage = pages.find(p=>p.id==='certificate');
+  certPage.html = \`
+    <div class="certificate">
+      <h2>Training Completion</h2>
+      <p id="certText">\${certText}</p>
+      <p class="small">Document source: Warehouse Housekeeping RA & SSOW. :contentReference[oaicite:4]{index=4}</p>
+      <div style="margin-top:14px">
+        <button class="btn primary" onclick="printCertificate()">Print Certificate</button>
+        <button class="btn" onclick="downloadReport()">Download Report</button>
+      </div>
+    </div>\`;
+  // If requested, navigate to certificate
+  if(showCertIfPassed) goToPage('certificate');
+  updateProgress();
+}
+
+/* Create a printable certificate window */
+function printCertificate(){
+  const last = JSON.parse(localStorage.getItem('warehouse.lastScore')||'null');
+  const name = prompt('Enter trainee name for certificate (optional):') || 'Trainee';
+  const passed = last && last.score >= Math.ceil(quizQuestions.length*0.8);
+  const certHtml = \`
+    <html><head><title>Certificate</title>
+    <style>body{font-family:Arial,Helvetica,sans-serif;text-align:center;padding:40px} .card{border:4px solid #0b63d6;padding:22px;border-radius:12px;display:inline-block}</style>
+    </head><body>
+      <div class="card">
+        <h1>Certificate of Completion</h1>
+        <p style="margin-top:6px">This certifies that</p>
+        <h2>\${name}</h2>
+        <p style="margin-top:6px">\${passed ? 'has successfully completed' : 'has completed' } the Warehouse Housekeeping training</p>
+        <p style="margin-top:6px">Score: \${last ? last.score : 'N/A'} / \${quizQuestions.length}</p>
+        <p style="margin-top:14px;font-size:12px;color:#666">Source: ISM-HS-SSOW/RA-008 — Warehouse Housekeeping</p>
+        <p style="margin-top:20px">Date: \${new Date().toLocaleDateString()}</p>
+      </div>
+      <script>window.print();</script>
+    </body></html>\`;
+  const w = window.open('', '_blank');
+  w.document.write(certHtml);
+  w.document.close();
+}
+
+/* Download a simple report (JSON) */
+function downloadReport(){
+  const report = {
+    document: 'Warehouse Housekeeping training',
+    source_file: 'Uploaded PDF (user provided)',
+    score: getScore(),
+    answers: state.answers,
+    completedAt: new Date().toISOString()
+  };
+  const blob = new Blob([JSON.stringify(report, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'warehouse_training_report.json';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+/* Reset course (clear answers & progress) */
+function resetCourse(){
+  if(!confirm('Reset course progress and answers?')) return;
+  state.answers = {};
+  localStorage.removeItem('warehouse.answers');
+  localStorage.removeItem('warehouse.lastScore');
+  state.pageIndex = 0;
+  saveState();
+  renderPage();
+}
+
+/* Save basic state */
+function saveState(){ localStorage.setItem('warehouse.pageIndex', state.pageIndex); localStorage.setItem('warehouse.answers', JSON.stringify(state.answers)); }
+
+/* Load persisted state */
+function loadState(){
+  const p = parseInt(localStorage.getItem('warehouse.pageIndex')||'0',10);
+  if(Number.isFinite(p)) state.pageIndex = Math.min(Math.max(0,p), pages.length-1);
+  const saved = JSON.parse(localStorage.getItem('warehouse.answers')||'{}');
+  state.answers = saved || {};
+}
+
+/* Init */
+function init(){
+  loadState();
+  renderTOC();
+  renderPage();
+  // if quiz already answered, recompute last score
+  if(Object.keys(state.answers).length) showFinalScore(false);
+}
+
+/* Keyboard navigation (left / right) */
+document.addEventListener('keydown', (e)=>{
+  if(e.key === 'ArrowRight') nextPage();
+  if(e.key === 'ArrowLeft') prevPage();
+});
+
+init();
+</script>
 </body>
 </html>
