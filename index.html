@@ -181,13 +181,13 @@ function printCertificate(){
   const certHtml = `<html><head><title>Certificate</title><style>body{font-family:Arial,Helvetica,sans-serif;text-align:center;padding:40px} .card{border:4px solid #0b63d6;padding:22px;border-radius:12px;display:inline-block}</style></head><body><div class="card"><h1>Certificate of Completion</h1><p style="margin-top:6px">This certifies that</p><h2>${'${'}name}${'}'}</h2><p style="margin-top:6px">${'${'}passed ? 'has successfully completed' : 'has completed' } the Warehouse Housekeeping training</p><p style="margin-top:6px">Score: ${'${'}last ? last.score : 'N/A'}${'}'} / ${'${'}quizQuestions.length}${'}'}</p><p style="margin-top:14px;font-size:12px;color:#666">Source: Warehouse Housekeeping PDF</p><p style="margin-top:20px">Date: ${'${'}new Date().toLocaleDateString()}{'}'}</p></div><script>window.print();</script></body></html>`;
   
 }
+
 function downloadReport(){
   const report = { document: 'Warehouse Housekeeping training', source_file: 'Uploaded PDF (user provided)', score: getScore(), answers: state.answers, completedAt: new Date().toISOString() };
-  const blob = new Blob([JSON.stringify(report, null, 2)], {type:'application/json'}); 
-  const url = URL.createObjectURL(blob); 
-  const a = document.createElement('a'); a.href = url; a.download = 'warehouse_training_report.json'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url); 
-
-}
+  const blob = new Blob([JSON.stringify(report, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'warehouse_training_report.json'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  }
 
 
 function resetCourse(){ if(!confirm('Reset course progress and answers?')) return; state.answers = {}; localStorage.removeItem('warehouse.answers'); localStorage.removeItem('warehouse.lastScore'); state.pageIndex = 0; saveState(); renderPage(); }
